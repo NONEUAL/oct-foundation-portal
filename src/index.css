@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@theme {
+  --color-court: #0e1a2b;
+  --color-court-light: #16263d;
+  --color-line: #24374f;
+  --color-scoreboard: #ffb703;
+  --color-chalk: #f4f1ea;
+  --color-mute: #8fa0b8;
+
+  --font-display: "Archivo Black", "Arial Black", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+body {
+  background-color: var(--color-court);
+  color: var(--color-chalk);
+  font-family: var(--font-body);
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.animate-live-pulse {
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
