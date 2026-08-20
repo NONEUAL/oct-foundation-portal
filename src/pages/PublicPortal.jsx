@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Chronicle from "./Chronicle";
+import Arena from "./Arena";
 
 const MODULES = [
   { id: "chronicle", label: "Chronicle", ready: true },
-  { id: "arena", label: "Arena", ready: false },
+  { id: "arena", label: "Arena", ready: true },
   { id: "spirit", label: "Spirit Meter", ready: false },
   { id: "pageantry", label: "Pageantry", ready: false },
 ];
@@ -48,7 +49,10 @@ export default function PublicPortal() {
         </nav>
       </header>
 
-      <main>{activeModule === "chronicle" && <Chronicle />}</main>
+      <main>
+        {activeModule === "chronicle" && <Chronicle />}
+        {activeModule === "arena" && <Arena />}
+      </main>
     </div>
   );
 }
