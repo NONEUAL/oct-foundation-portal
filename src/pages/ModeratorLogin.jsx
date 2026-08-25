@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../lib/AuthContext";
+import octLogo from "../assets/oct-logo.png";
 
 export default function ModeratorLogin() {
   const { sendMagicLink } = useAuth();
@@ -23,6 +24,11 @@ export default function ModeratorLogin() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-court px-4">
         <div className="max-w-sm text-center">
+          <img
+            src={octLogo}
+            alt="Olivarez College – Tagaytay seal"
+            className="mx-auto mb-4 h-14 w-14"
+          />
           <p className="font-mono text-xs tracking-wide text-scoreboard">
             CHECK YOUR EMAIL
           </p>
@@ -41,6 +47,11 @@ export default function ModeratorLogin() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-court px-4">
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
+        <img
+          src={octLogo}
+          alt="Olivarez College – Tagaytay seal"
+          className="mb-4 h-14 w-14"
+        />
         <p className="font-mono text-xs tracking-wide text-mute">
           MODERATOR ACCESS
         </p>
@@ -62,7 +73,7 @@ export default function ModeratorLogin() {
         />
 
         {status === "error" && (
-          <p className="mt-2 text-sm text-scoreboard">{errorMessage}</p>
+          <p className="mt-2 text-sm text-ember">{errorMessage}</p>
         )}
 
         <button
