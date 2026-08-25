@@ -61,7 +61,7 @@ export default function VoteButton({ candidateId, initialCount }) {
       </button>
       <span className="font-mono text-xs text-mute">{count}</span>
       {status === "error" && (
-        <span className="text-xs text-scoreboard">{errorMessage}</span>
+        <span className="text-xs text-ember">{errorMessage}</span>
       )}
     </div>
   );
