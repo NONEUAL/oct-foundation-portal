@@ -4,6 +4,7 @@ import Chronicle from "./Chronicle";
 import Arena from "./Arena";
 import SpiritMeter from "./SpiritMeter";
 import Pageantry from "./Pageantry";
+import octLogo from "../assets/oct-logo.png";
 
 const MODULES = [
   { id: "chronicle", label: "Chronicle", ready: true },
@@ -19,17 +20,29 @@ export default function PublicPortal() {
     <div className="min-h-screen bg-court text-chalk">
       <header className="border-b border-line px-4 py-4">
         <div className="flex items-start justify-between">
-          <div className="font-display text-lg tracking-wide">
-            OCT FOUNDATION WEEK
+          <div className="flex items-center gap-3">
+            <img
+              src={octLogo}
+              alt="Olivarez College – Tagaytay seal"
+              className="h-11 w-11 flex-shrink-0 drop-shadow-[0_0_10px_rgba(221,169,104,0.35)]"
+            />
+            <div>
+              <div className="font-display text-2xl leading-none tracking-wide">
+                OCT FOUNDATION WEEK
+              </div>
+              <div className="mt-1 font-mono text-[10px] tracking-[0.2em] text-mute">
+                MIND · BODY · SOUL
+              </div>
+            </div>
           </div>
           <Link
             to="/moderator"
-            className="font-mono text-[11px] tracking-wide text-mute hover:text-scoreboard"
+            className="mt-1 font-mono text-[11px] tracking-wide text-mute hover:text-scoreboard"
           >
             MOD LOGIN →
           </Link>
         </div>
-        <nav className="mt-3 flex gap-6">
+        <nav className="mt-4 flex gap-6">
           {MODULES.map((mod) => (
             <button
               key={mod.id}
