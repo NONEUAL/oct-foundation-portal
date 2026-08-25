@@ -63,7 +63,7 @@ export default function ScoreEntryForm({ match, onUpdated }) {
         {status === "saving" ? "SAVING…" : "UPDATE"}
       </button>
       {status === "error" && (
-        <span className="text-xs text-scoreboard">{errorMessage}</span>
+        <span className="text-xs text-ember">{errorMessage}</span>
       )}
     </form>
   );
