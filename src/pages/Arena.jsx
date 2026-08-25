@@ -100,7 +100,7 @@ export default function Arena() {
   if (errorMessage) {
     return (
       <div className="p-8">
-        <p className="font-mono text-sm text-scoreboard">Something's off.</p>
+        <p className="font-mono text-sm text-ember">Something's off.</p>
         <p className="mt-2 text-sm text-mute">{errorMessage}</p>
       </div>
     );
