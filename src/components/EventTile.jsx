@@ -4,11 +4,11 @@ import LiveBadge from "./LiveBadge";
 // schema, and category is the more useful visual grouping in a day view
 // where multiple venues run in parallel anyway.
 const CATEGORY_COLOR = {
-  sports: "#FFB703",
-  esports: "#7C9EFF",
-  skills: "#4ADE80",
-  pageant: "#F472B6",
-  general: "#8FA0B8",
+  sports: "#DDA968", // same gold as the seal's medallion
+  esports: "#6FA8D6", // cool blue, deliberately the odd one out — screens vs. the physical/ceremonial rest
+  skills: "#8FBF6E", // sage-leaning green, echoes the laurel wreath
+  pageant: "#D68FA0", // dusty rose, ceremonial without competing with gold
+  general: "#7fa98c",
 };
 
 function formatTime(isoString) {
