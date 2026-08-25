@@ -1,15 +1,24 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @theme {
-  --color-court: #0e1a2b;
-  --color-court-light: #16263d;
-  --color-line: #24374f;
-  --color-scoreboard: #ffb703;
-  --color-chalk: #f4f1ea;
-  --color-mute: #8fa0b8;
+  /* Deep forest green, not black — a campus quad after dark, not an arena. */
+  --color-court: #0a2417;
+  --color-court-light: #123521;
+  --color-line: #1f4a30;
 
-  --font-display: "Archivo Black", "Arial Black", sans-serif;
+  /* Warm gold/caramel, pulled from the medallion in the OCT seal.
+     This is the general accent: CTAs, active tabs, links. */
+  --color-scoreboard: #dda968;
+
+  /* The actual torch-flame red from the seal. Reserved ONLY for "this is
+     happening right now" — live badges and error states. Never decorative. */
+  --color-ember: #e8482c;
+
+  --color-chalk: #f5f1e6;
+  --color-mute: #7fa98c;
+
+  --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
@@ -18,13 +27,19 @@ body {
   background-color: var(--color-court);
   color: var(--color-chalk);
   font-family: var(--font-body);
+  background-image: radial-gradient(
+    ellipse 800px 400px at 50% -10%,
+    rgba(221, 169, 104, 0.08),
+    transparent 60%
+  );
+  background-attachment: fixed;
 }
 
-@keyframes live-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+@keyframes ember-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px 1px rgba(232, 72, 44, 0.6); }
+  50% { opacity: 0.5; box-shadow: 0 0 2px 0px rgba(232, 72, 44, 0.3); }
 }
 
 .animate-live-pulse {
-  animation: live-pulse 1.6s ease-in-out infinite;
+  animation: ember-glow 1.6s ease-in-out infinite;
 }
