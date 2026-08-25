@@ -97,7 +97,7 @@ export default function ModeratorDashboard() {
 
       <main className="p-4">
         {errorMessage && (
-          <p className="mb-4 text-sm text-scoreboard">{errorMessage}</p>
+          <p className="mb-4 text-sm text-ember">{errorMessage}</p>
         )}
 
         {departments.length === 0 ? (
