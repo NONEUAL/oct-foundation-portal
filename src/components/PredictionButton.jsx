@@ -84,7 +84,7 @@ export default function PredictionButton({ match, departmentA, departmentB }) {
         </button>
       </div>
       {status === "error" && (
-        <p className="text-xs text-scoreboard">{errorMessage}</p>
+        <p className="text-xs text-ember">{errorMessage}</p>
       )}
     </div>
   );
