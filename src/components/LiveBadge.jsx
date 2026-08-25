@@ -1,8 +1,8 @@
 export default function LiveBadge({ status }) {
   if (status === "ongoing") {
     return (
-      <span className="inline-flex items-center gap-1.5 font-mono text-xs tracking-wide text-scoreboard">
-        <span className="h-2 w-2 rounded-full bg-scoreboard animate-live-pulse" />
+      <span className="inline-flex items-center gap-1.5 font-mono text-xs tracking-wide text-ember">
+        <span className="h-2 w-2 rounded-full bg-ember animate-live-pulse" />
         LIVE
       </span>
     );
