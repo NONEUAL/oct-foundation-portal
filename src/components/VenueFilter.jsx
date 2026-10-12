@@ -1,16 +1,23 @@
 export default function VenueFilter({ venues, activeVenueId, onSelect }) {
+  const chips = [{ id: null, name: "All venues" }, ...venues];
   return (
-    <select
-      value={activeVenueId ?? "all"}
-      onChange={(e) => onSelect(e.target.value === "all" ? null : e.target.value)}
-      className="rounded border border-line bg-court-light px-3 py-2 font-mono text-xs text-chalk focus:outline-none focus:ring-2 focus:ring-scoreboard"
-    >
-      <option value="all">All venues</option>
-      {venues.map((venue) => (
-        <option key={venue.id} value={venue.id}>
-          {venue.name}
-        </option>
-      ))}
-    </select>
+    <div className="flex gap-2 overflow-x-auto px-4" role="group" aria-label="Filter by venue">
+      {chips.map((v) => {
+        const active = (v.id ?? null) === (activeVenueId ?? null);
+        return (
+          <button
+            key={v.id ?? "all"}
+            aria-pressed={active}
+            onClick={() => onSelect(v.id)}
+            className={[
+              "min-h-11 flex-shrink-0 rounded-full border px-4 text-sm font-semibold",
+              active ? "border-mid bg-hover text-ink" : "border-line bg-surface text-soft hover:bg-hover",
+            ].join(" ")}
+          >
+            {v.name}
+          </button>
+        );
+      })}
+    </div>
   );
 }
