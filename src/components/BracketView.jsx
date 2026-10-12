@@ -1,74 +1,48 @@
 import LiveBadge from "./LiveBadge";
 
-export default function BracketView({ matches, departmentLookup }) {
+function roundName(round, last) {
+  if (round === last) return "Final";
+  if (round === last - 1) return "Semifinals";
+  if (round === last - 2) return "Quarterfinals";
+  return `Round ${round}`;
+}
+
+export default function BracketView({ matches, departments }) {
   const rounds = {};
-  matches.forEach((m) => {
-    if (!rounds[m.round]) rounds[m.round] = [];
-    rounds[m.round].push(m);
-  });
-  const roundNumbers = Object.keys(rounds)
-    .map(Number)
-    .sort((a, b) => a - b);
-
-  if (roundNumbers.length === 0) {
-    return (
-      <p className="py-8 text-center text-sm text-mute">
-        No bracket set up for this event yet.
-      </p>
-    );
+  matches.forEach((m) => (rounds[m.round ?? 1] ||= []).push(m));
+  const nums = Object.keys(rounds).map(Number).sort((a, b) => a - b);
+  if (nums.length === 0) {
+    return <p className="py-8 text-center text-sm text-soft">No bracket set up for this event yet.</p>;
   }
-
+  const last = nums[nums.length - 1];
   return (
-    <div className="flex gap-6 overflow-x-auto pb-4">
-      {roundNumbers.map((roundNum) => (
-        <div key={roundNum} className="flex flex-shrink-0 flex-col gap-4">
-          <p className="font-mono text-[11px] tracking-wide text-mute">
-            {roundNum === roundNumbers[roundNumbers.length - 1]
-              ? "FINALS"
-              : `ROUND ${roundNum}`}
-          </p>
-          {rounds[roundNum].map((match) => {
-            const deptA = departmentLookup[match.department_a_id];
-            const deptB = departmentLookup[match.department_b_id];
-            return (
-              <div
-                key={match.id}
-                className="w-48 rounded border border-line bg-court-light p-3"
-              >
-                <div className="mb-1 flex justify-end">
-                  <LiveBadge status={match.status} />
+    <div className="flex snap-x gap-4 overflow-x-auto pb-4">
+      {nums.map((n) => (
+        <section key={n} className="flex w-60 flex-shrink-0 snap-start flex-col gap-3" aria-label={roundName(n, last)}>
+          <h3 className="font-display text-lg font-bold text-ink">{roundName(n, last)}</h3>
+          <div className="flex flex-1 flex-col justify-around gap-3">
+            {rounds[n]
+              .sort((x, y) => (x.bracket_position ?? 0) - (y.bracket_position ?? 0))
+              .map((m) => (
+                <div key={m.id} className="rounded-2xl border border-line bg-surface p-3">
+                  <div className="mb-1 flex justify-end"><LiveBadge status={m.computed_status} /></div>
+                  {[
+                    { dept: departments[m.department_a_id], score: m.score_a },
+                    { dept: departments[m.department_b_id], score: m.score_b },
+                  ].map((side, i) => {
+                    const won = m.winner_department_id && side.dept?.id === m.winner_department_id;
+                    const lost = m.winner_department_id && !won;
+                    return (
+                      <div key={i} className={`flex items-center justify-between py-1.5 ${lost ? "text-muted line-through" : ""} ${won ? "font-bold text-ink" : ""}`}>
+                        <span className="font-display text-lg">{side.dept?.code ?? "TBD"}</span>
+                        <span className="font-display text-xl tabular-nums">{side.score ?? 0}</span>
+                      </div>
+                    );
+                  })}
                 </div>
-                {[
-                  { dept: deptA, score: match.score_a },
-                  { dept: deptB, score: match.score_b },
-                ].map((side, i) => {
-                  const isWinner =
-                    match.winner_department_id &&
-                    side.dept?.id === match.winner_department_id;
-                  return (
-                    <div
-                      key={i}
-                      className={[
-                        "flex items-center justify-between py-1 text-sm",
-                        isWinner ? "text-scoreboard" : "text-chalk",
-                        match.winner_department_id && !isWinner
-                          ? "text-mute line-through"
-                          : "",
-                      ].join(" ")}
-                    >
-                      <span className="font-mono text-xs">
-                        {side.dept?.code ?? "TBD"}
-                      </span>
-                      <span className="font-display tabular-nums">
-                        {side.score}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
+              ))}
+          </div>
+        </section>
       ))}
     </div>
   );
