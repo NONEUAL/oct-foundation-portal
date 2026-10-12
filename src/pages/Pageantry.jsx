@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase, getActiveEdition } from "../lib/supabaseClient";
-import VoteButton from "../components/VoteButton";
+import { Splash, ErrorNote } from "../components/Shell";
 
 export default function Pageantry() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [candidates, setCandidates] = useState([]);
-  const [voteCounts, setVoteCounts] = useState({});
   const [departmentLookup, setDepartmentLookup] = useState({});
 
   useEffect(() => {
@@ -25,12 +24,11 @@ export default function Pageantry() {
         return;
       }
 
-      const [candidatesResult, tallyResult, deptsResult] = await Promise.all([
+      const [candidatesResult, deptsResult] = await Promise.all([
         supabase
           .from("candidates")
           .select("*")
           .eq("edition_id", edition.id),
-        supabase.from("candidate_vote_counts").select("*"),
         supabase.from("departments").select("*"),
       ]);
 
@@ -42,16 +40,10 @@ export default function Pageantry() {
         return;
       }
 
-      const tallyLookup = {};
-      (tallyResult.data || []).forEach(
-        (row) => (tallyLookup[row.candidate_id] = row.vote_count)
-      );
-
       const deptLookup = {};
       (deptsResult.data || []).forEach((d) => (deptLookup[d.id] = d));
 
       setCandidates(candidatesResult.data || []);
-      setVoteCounts(tallyLookup);
       setDepartmentLookup(deptLookup);
       setLoading(false);
     }
@@ -62,48 +54,33 @@ export default function Pageantry() {
     };
   }, []);
 
-  if (loading) {
-    return <div className="p-8 font-mono text-sm text-mute">Loading…</div>;
-  }
-
-  if (errorMessage) {
-    return (
-      <div className="p-8">
-        <p className="font-mono text-sm text-ember">Something's off.</p>
-        <p className="mt-2 text-sm text-mute">{errorMessage}</p>
-      </div>
-    );
-  }
-
-  if (candidates.length === 0) {
-    return (
-      <div className="p-8">
-        <p className="text-sm text-mute">
-          No MMOCT candidates added for this edition yet.
-        </p>
-      </div>
-    );
-  }
+  if (loading) return <Splash>Loading…</Splash>;
+  if (errorMessage) return <ErrorNote message={errorMessage} />;
+  if (candidates.length === 0) return <Splash>No MMOCT candidates added for this edition yet.</Splash>;
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
-      {candidates.map((candidate) => (
-        <div key={candidate.id} className="border border-line p-4">
-          <p className="font-display text-sm">{candidate.name}</p>
-          <p className="mt-1 text-xs text-mute">
-            {departmentLookup[candidate.department_id]?.name ?? ""}
-          </p>
-          {candidate.bio && (
-            <p className="mt-2 text-xs text-mute">{candidate.bio}</p>
-          )}
-          <div className="mt-3">
-            <VoteButton
-              candidateId={candidate.id}
-              initialCount={voteCounts[candidate.id] ?? 0}
-            />
-          </div>
-        </div>
-      ))}
+    <div className="px-4 pb-6">
+      <h2 className="font-display text-3xl font-bold text-ink">Pageantry</h2>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {candidates.map((c) => (
+          <article key={c.id} className="rounded-2xl border border-line bg-surface p-4">
+            <div className="flex items-center gap-3">
+              {c.photo_url ? (
+                <img src={c.photo_url} alt="" className="h-14 w-14 rounded-full border-2 border-gold object-cover" />
+              ) : (
+                <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold bg-hover font-display text-xl font-bold text-forest" aria-hidden="true">
+                  {c.name?.[0]}
+                </span>
+              )}
+              <div className="min-w-0">
+                <h3 className="font-bold leading-snug">{c.name}</h3>
+                <p className="text-sm text-soft">{departmentLookup[c.department_id]?.name ?? ""}</p>
+              </div>
+            </div>
+            {c.bio && <p className="mt-3 text-sm leading-relaxed">{c.bio}</p>}
+          </article>
+        ))}
+      </div>
     </div>
   );
 }
