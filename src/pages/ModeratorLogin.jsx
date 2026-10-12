@@ -4,9 +4,11 @@ import { useAuth } from "../lib/AuthContext";
 import octLogo from "../assets/oct-logo.png";
 
 export default function ModeratorLogin() {
-  const { sendMagicLink } = useAuth();
+  const { sendMagicLink, signInWithPassword } = useAuth();
   const { pathname } = useLocation();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mode, setMode] = useState("password"); // password | link
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const isAdminPage = pathname.startsWith("/admin");
@@ -14,6 +16,16 @@ export default function ModeratorLogin() {
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus("sending");
+    if (mode === "password") {
+      const { error } = await signInWithPassword(email.trim(), password);
+      if (error) {
+        setStatus("error");
+        setErrorMessage(error.message === "Invalid login credentials" ? "Wrong email or password." : error.message);
+        return;
+      }
+      setStatus("idle"); // the auth listener swaps this page for the dashboard
+      return;
+    }
     const { error } = await sendMagicLink(email.trim(), isAdminPage ? "/admin" : "/moderator");
     if (error) {
       setStatus("error");
@@ -43,13 +55,28 @@ export default function ModeratorLogin() {
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <h1 className="font-display text-2xl font-bold text-ink">Sign in</h1>
-            <p className="text-sm text-soft">Use the email you were invited with. We'll send a link, so there's no password to remember.</p>
+            <div role="tablist" className="flex gap-1 rounded-2xl bg-hover p-1">
+              {[["password", "Password"], ["link", "Email link"]].map(([id, label]) => (
+                <button key={id} type="button" role="tab" aria-selected={mode === id} onClick={() => { setMode(id); setStatus("idle"); }}
+                  className={`min-h-12 flex-1 rounded-xl font-semibold ${mode === id ? "bg-forest text-white" : "text-forest"}`}>{label}</button>
+              ))}
+            </div>
+            <p className="text-sm text-soft">
+              {mode === "password" ? "Sign in with the email and password an admin set up for you." : "Use the email you were invited with. We'll send a link, so there's no password to remember."}
+            </p>
             <label htmlFor="email" className="text-sm font-semibold">Email</label>
             <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@olivarez.edu.ph"
               className="min-h-12 rounded-xl border border-line bg-surface px-4 text-base focus:border-mid" />
+            {mode === "password" && (
+              <>
+                <label htmlFor="password" className="text-sm font-semibold">Password</label>
+                <input id="password" type="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
+                  className="min-h-12 rounded-xl border border-line bg-surface px-4 text-base focus:border-mid" />
+              </>
+            )}
             {status === "error" && <p role="alert" className="text-sm font-semibold text-live">{errorMessage}</p>}
             <button type="submit" disabled={status === "sending"} className="min-h-12 rounded-xl bg-gold font-bold text-ink disabled:opacity-50">
-              {status === "sending" ? "Sending…" : "Send sign-in link"}
+              {status === "sending" ? "Please wait…" : mode === "password" ? "Sign in" : "Send sign-in link"}
             </button>
           </form>
         )}
