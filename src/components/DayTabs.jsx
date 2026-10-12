@@ -1,23 +1,21 @@
 export default function DayTabs({ days, activeDay, onSelect }) {
   return (
-    <div className="flex gap-px overflow-x-auto border-b border-line bg-court-light">
+    <div role="tablist" aria-label="Festival days" className="flex gap-2 overflow-x-auto px-4 pb-1">
       {days.map((day) => {
-        const isActive = day.day_number === activeDay;
+        const active = day.day_number === activeDay;
         return (
           <button
             key={day.day_number}
+            role="tab"
+            aria-selected={active}
             onClick={() => onSelect(day.day_number)}
             className={[
-              "flex-shrink-0 px-5 py-3 font-mono text-xs tracking-wide transition-colors",
-              isActive
-                ? "bg-court text-scoreboard border-b-2 border-scoreboard -mb-px"
-                : "text-mute hover:text-chalk",
+              "min-h-12 flex-shrink-0 rounded-xl border px-4 text-left transition-colors",
+              active ? "border-forest bg-forest text-white" : "border-line bg-surface text-body hover:bg-hover",
             ].join(" ")}
           >
-            DAY {day.day_number}
-            <div className="mt-0.5 font-body text-[13px] normal-case tracking-normal">
-              {day.label}
-            </div>
+            <span className="block font-display text-lg font-bold leading-none">Day {day.day_number}</span>
+            <span className={`block text-xs ${active ? "text-line" : "text-soft"}`}>{day.label}</span>
           </button>
         );
       })}
