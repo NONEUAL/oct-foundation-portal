@@ -60,6 +60,11 @@ export function AuthProvider({ children }) {
     return { error };
   }
 
+  async function signInWithPassword(email, password) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error };
+  }
+
   async function signOut() {
     await supabase.auth.signOut();
   }
@@ -71,6 +76,7 @@ export function AuthProvider({ children }) {
     ...role,
     reloadRole: loadRole,
     sendMagicLink,
+    signInWithPassword,
     signOut,
   };
 
