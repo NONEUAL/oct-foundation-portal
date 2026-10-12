@@ -83,7 +83,7 @@ export default function AdminBracket({ events, matches, departments, reload }) {
           </div>
           {slots.map((id, i) => (
             <label key={i} className="flex items-center gap-2 text-sm font-semibold">
-              <span className="w-14 flex-shrink-0 text-soft">Seed {i + 1}</span>
+              <span className="min-w-14 shrink-0 text-soft">Seed {i + 1}</span>   
               <select className={select} value={id} onChange={(e) => setSeed(i, e.target.value)}>
                 <option value="">Choose…</option>
                 {deptList.map((d) => <option key={d.id} value={d.id}>{d.code} · {d.name}</option>)}
