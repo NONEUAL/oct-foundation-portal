@@ -3,6 +3,7 @@ import { supabase, getActiveEdition } from "../lib/supabaseClient";
 import DayTabs from "../components/DayTabs";
 import VenueFilter from "../components/VenueFilter";
 import EventTile from "../components/EventTile";
+import { Splash, ErrorNote } from "../components/Shell";
 
 export default function Chronicle() {
   const [loading, setLoading] = useState(true);
@@ -86,57 +87,34 @@ export default function Chronicle() {
       .filter((e) => !activeVenueId || e.venue_id === activeVenueId);
   }, [events, activeDay, activeVenueId]);
 
-  if (loading) {
-    return (
-      <div className="p-8 font-mono text-sm text-mute">Loading schedule…</div>
-    );
-  }
-
-  if (errorMessage) {
-    return (
-      <div className="p-8">
-        <p className="font-mono text-sm text-ember">Something's off.</p>
-        <p className="mt-2 text-sm text-mute">{errorMessage}</p>
-      </div>
-    );
-  }
-
+  if (loading) return <Splash>Loading schedule…</Splash>;
+  if (errorMessage) return <ErrorNote message={errorMessage} />;
   if (days.length === 0) {
     return (
       <div className="p-8">
-        <p className="font-display text-lg">No events yet.</p>
-        <p className="mt-2 text-sm text-mute">
-          Once events are added for the active edition, they'll show up here
-          grouped by day.
-        </p>
+        <p className="font-display text-xl font-bold">No events yet.</p>
+        <p className="mt-1 text-sm text-soft">Events for the active edition will show up here, grouped by day.</p>
       </div>
     );
   }
 
+  const live = visibleEvents.filter((e) => e.computed_status === "ongoing");
+
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       <DayTabs days={days} activeDay={activeDay} onSelect={setActiveDay} />
+      <VenueFilter venues={venues} activeVenueId={activeVenueId} onSelect={setActiveVenueId} />
 
-      <div className="flex items-center justify-between px-4 py-3">
-        <h2 className="font-display text-sm tracking-wide text-mute">
-          SCHEDULE
+      <div className="flex flex-col gap-2 px-4 pb-6">
+        <h2 className="font-display text-2xl font-bold text-ink">
+          {live.length > 0 ? `${live.length} happening now` : "Schedule"}
         </h2>
-        <VenueFilter
-          venues={venues}
-          activeVenueId={activeVenueId}
-          onSelect={setActiveVenueId}
-        />
-      </div>
-
-      <div className="flex flex-col gap-px px-4 pb-8">
         {visibleEvents.length === 0 ? (
-          <p className="py-8 text-center text-sm text-mute">
-            Nothing scheduled for this venue on this day.
-          </p>
+          <p className="py-8 text-center text-sm text-soft">Nothing scheduled for this venue on this day.</p>
         ) : (
-          visibleEvents.map((event) => (
-            <EventTile key={event.id} event={event} />
-          ))
+          <div className="grid gap-2 lg:grid-cols-2">
+            {visibleEvents.map((event) => <EventTile key={event.id} event={event} />)}
+          </div>
         )}
       </div>
     </div>
