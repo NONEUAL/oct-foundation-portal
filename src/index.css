@@ -1,45 +1,41 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap");
 
 @theme {
-  /* Deep forest green, not black — a campus quad after dark, not an arena. */
-  --color-court: #0a2417;
-  --color-court-light: #123521;
-  --color-line: #1f4a30;
+  --color-forest: #1a3a1a;   /* buttons, table headers */
+  --color-ink: #0a1f0a;      /* header gradient start, headings */
+  --color-mid: #2d6a35;      /* header gradient end, focus borders */
+  --color-gold: #c8a825;     /* highlight buttons, emphasis */
+  --color-mint: #f0faf2;     /* page background */
+  --color-surface: #ffffff;
+  --color-tint: #f4fbf5;
+  --color-hover: #e8f5e9;
+  --color-line: #c8e6c9;
+  --color-muted: #7aaa80;    /* icons, small labels */
+  --color-body: #0d1f0d;
+  --color-soft: #3d6b45;     /* readable secondary text on light surfaces */
+  --color-live: #c8402a;     /* "happening now" and errors only */
 
-  /* Warm gold/caramel, pulled from the medallion in the OCT seal.
-     This is the general accent: CTAs, active tabs, links. */
-  --color-scoreboard: #dda968;
-
-  /* The actual torch-flame red from the seal. Reserved ONLY for "this is
-     happening right now" — live badges and error states. Never decorative. */
-  --color-ember: #e8482c;
-
-  --color-chalk: #f5f1e6;
-  --color-mute: #7fa98c;
-
-  --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Figtree", system-ui, sans-serif;
 }
 
 body {
-  background-color: var(--color-court);
-  color: var(--color-chalk);
+  margin: 0;
+  background-color: var(--color-mint);
+  color: var(--color-body);
   font-family: var(--font-body);
-  background-image: radial-gradient(
-    ellipse 800px 400px at 50% -10%,
-    rgba(221, 169, 104, 0.08),
-    transparent 60%
-  );
-  background-attachment: fixed;
 }
 
-@keyframes ember-glow {
-  0%, 100% { opacity: 1; box-shadow: 0 0 6px 1px rgba(232, 72, 44, 0.6); }
-  50% { opacity: 0.5; box-shadow: 0 0 2px 0px rgba(232, 72, 44, 0.3); }
-}
+button, input, select { font-family: inherit; }
 
-.animate-live-pulse {
-  animation: ember-glow 1.6s ease-in-out infinite;
+:focus-visible { outline: 2px solid var(--color-mid); outline-offset: 2px; }
+
+@keyframes live-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-live-pulse { animation: live-glow 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-live-pulse { animation: none; }
 }
